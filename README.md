@@ -5,7 +5,7 @@ A simple and customizable audio visualizer built with **Next.js** and **React**.
 
 ## Demo
 
-Check out the live demo at: [https://github.com/hugo-chilemme/nextjs-audio-visualizer](https://nextjs-audio-visualizer-livid.vercel.app/)
+Check out the live demo at: https://nextjs-audio-visualizer-livid.vercel.app/
 
 ## Features
 
