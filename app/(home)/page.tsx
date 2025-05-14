@@ -3,8 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { AnimatedCircularProgressBar } from "@/components/magicui/animated-circular-progress-bar";
-import { NumberTicker } from "@/components/magicui/number-ticker";
 import { Slider } from "@/components/ui/slider";
 
 export default function LoadingScreen() {
