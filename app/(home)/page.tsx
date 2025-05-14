@@ -1,18 +1,19 @@
+// ./app/(home)/page.tsx
 "use client";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { AnimatedCircularProgressBar } from "@/components/magicui/animated-circular-progress-bar";
 import { NumberTicker } from "@/components/magicui/number-ticker";
-import { Slider } from "@/components/ui/slider"
+import { Slider } from "@/components/ui/slider";
 
 export default function LoadingScreen() {
-	const [scale, setScale] = useState(1);
-	const [currentTextIndex, setCurrentTextIndex] = useState(0);
+	const [scale, setScale] = useState<number>(1);
+	const [currentTextIndex, setCurrentTextIndex] = useState<number>(0);
 	const audioRef = useRef<HTMLAudioElement | null>(null);
-	const [progress, setProgress] = useState(0);
-	const [volume, setVolume] = useState(0.5);
-	const [paused, setPaused] = useState(false);
+	const [progress, setProgress] = useState<number>(0);
+	const [volume, setVolume] = useState<number>(0.5);
+	const [paused, setPaused] = useState<boolean>(false);
 
 	useEffect(() => {
 		const audio1 = new Audio("/music.mp3");
@@ -20,9 +21,7 @@ export default function LoadingScreen() {
 		audio1.loop = false;
 
 		audio1.play();
-		audio1.volume = volume;
 
-		// Set up AudioContext for audio1
 		const audioContext1 = new (window.AudioContext || (window as any).webkitAudioContext)();
 		const analyser1 = audioContext1.createAnalyser();
 		const source1 = audioContext1.createMediaElementSource(audio1);
@@ -35,7 +34,8 @@ export default function LoadingScreen() {
 		const animate1 = () => {
 			analyser1.getByteFrequencyData(dataArray1);
 			const bassFrequencies1 = dataArray1.slice(0, dataArray1.length / 2);
-			const avgBassFrequency1 = bassFrequencies1.reduce((a, b) => a + b, 0) / bassFrequencies1.length;
+			const avgBassFrequency1 =
+				bassFrequencies1.reduce((a, b) => a + b, 0) / bassFrequencies1.length;
 			const newScale1 = 1 + avgBassFrequency1 / (256 / 2);
 
 			setScale(newScale1);
@@ -52,28 +52,30 @@ export default function LoadingScreen() {
 	}, []);
 
 	useEffect(() => {
+		if (audioRef.current) {
+			audioRef.current.volume = volume;
+		}
+	}, [volume]);
+
+	useEffect(() => {
 		const handleKeyDown = (event: KeyboardEvent) => {
 			if (event.code === "Space") {
-				if (audioRef.current.paused) {
+				if (audioRef.current?.paused) {
 					audioRef.current.play();
 					setPaused(false);
 				} else {
-					audioRef.current.pause();
+					audioRef.current?.pause();
 					setPaused(true);
 				}
 			}
 		};
-	
+
 		window.addEventListener("keydown", handleKeyDown);
+		return () => window.removeEventListener("keydown", handleKeyDown);
 	}, []);
 
-
 	return (
-		<div 
-			className="flex h-screen w-full items-center justify-center relative bg-black" 
-			
-		>
-			 
+		<div className="flex h-screen w-full items-center justify-center relative bg-black">
 			<Image
 				src="/logo.jpg?id=2"
 				alt="Logo"
@@ -85,7 +87,6 @@ export default function LoadingScreen() {
 					transform: `scale(${scale})`,
 					boxShadow: `0 0 ${(scale - 1) * 40}px rgba(255, 255, 255, 1)`,
 					transition: "transform 0.1s ease-out",
-					
 				}}
 				priority
 			/>
@@ -93,21 +94,15 @@ export default function LoadingScreen() {
 			<div className="fixed right-14 bottom-14 flex items-center gap-4">
 				<span className="text-sm text-right font-medium">
 					{Math.round(volume * 100)}%
-					{(Math.round(volume * 100) === 0 && !paused) && (
+					{Math.round(volume * 100) === 0 && !paused && (
 						<span className="text-white-500"> (Muted)</span>
 					)}
-					{paused && (
-						<span className="text-white-500"> (Paused)</span>
-					)}
-
+					{paused && <span className="text-white-500"> (Paused)</span>}
 				</span>
 				<Slider
 					defaultValue={[volume]}
-					onValueChange={(value) => {
-					setVolume(value[0]);
-					if (audioRef.current) {
-						audioRef.current.volume = value[0];
-					}
+					onValueChange={(value: number[]) => {
+						setVolume(value[0]);
 					}}
 					max={1}
 					step={0.01}
@@ -115,8 +110,6 @@ export default function LoadingScreen() {
 					className="w-32"
 				/>
 			</div>
-
-
 		</div>
 	);
 }

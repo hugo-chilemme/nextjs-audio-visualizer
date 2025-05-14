@@ -13,7 +13,7 @@ export default function LoadingScreen({ children }: { children: React.ReactNode 
 				<span className="font-medium">Click anywhere to start the animation</span>
 
 				<div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-center text-sm text-white">
-					<span className="text-orange-500 font-semibold">Did you know?</span> Websites can't play audio (like music) automatically—you need to interact with the page first, such as by clicking.
+					<span className="text-orange-500 font-semibold">Did you know?</span> Websites can&apos;t play audio (like music) automatically—you need to interact with the page first, such as by clicking.
 				</div>
 			</div> 
 		)
